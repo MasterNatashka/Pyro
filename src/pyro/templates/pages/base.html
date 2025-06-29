@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Pyro{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <link rel="icon" href="{% static 'favicon.png' %}" type="image/png">
+</head>
+<body>
+    <header class="app-header">
+        <nav class="container">
+            <a 
+                href="{% url 'home' %}" 
+                class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+            >Просмотр</a>
+            <a 
+                href="{% url 'archive' %}"
+                class="{% if request.resolver_match.url_name == 'archive' %}active{% endif %}"
+            >Архив</a>
+            <a 
+                href="{% url 'settings' %}"
+                class="{% if request.resolver_match.url_name == 'settings' %}active{% endif %}"
+            >Настройки</a>
+        </nav>
+    </header>
+    
+    <main class="app-content container">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
