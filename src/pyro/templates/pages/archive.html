@@ -3,5 +3,36 @@
 {% block title %}Архив{% endblock %}
 
 {% block content %}
-<h1>Архив</h1>
+<form>
+    <label>
+        <input type="date" name="start_date" id="start"></label>
+    <label>
+        <input type="date" name="end" id="end"></label>
+    <label>
+        <select name="start_time" id="start_time">
+            {% include "components/time_options.html" %}
+        </select>
+    </label>
+    <label>
+        <select name="end_time" id="end_time">
+            {% include "components/time_options.html" %}
+        </select>
+    </label>
+    <label>
+        <select name="location" id="location">
+            <option value="" disabled selected>Участок</option>
+            {% for loc in locs %}
+                <option value={{loc.id}}>{{loc.name}}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>
+        <select name="camera" id="camera">
+            <option value="" disabled selected>Камера</option>
+            {% for cam in cams %}
+                <option value={{cam.id}}>{{cam.name}}</option>
+            {% endfor %}
+        </select>
+    </label>
+</form>
 {% endblock %}

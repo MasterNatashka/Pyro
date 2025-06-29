@@ -16,10 +16,6 @@ html {
     padding-inline: 20px;
 }
 
-.app-content {
-    margin-block: 12px;
-}
-
 .app-header {
     background-color: #224;
     color: #fff;
@@ -39,4 +35,9 @@ html {
             }
         }
     }
+}
+
+
+.app-content {
+    margin-block: 20px;
 }
