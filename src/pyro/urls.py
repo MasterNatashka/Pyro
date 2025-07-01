@@ -23,5 +23,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('', views.home, name='home'),
     path('archive/', views.archive, name='archive'),
-    path('settings/', views.settings_page, name='settings'),
+    path('settings/', views.settings, name='settings'),
+    path('video/<int:id>', views.video, name='video'),
 ]

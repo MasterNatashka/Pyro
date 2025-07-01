@@ -3,5 +3,61 @@
 {% block title %}Просмотр{% endblock %}
 
 {% block content %}
-<h1>Просмотр</h1>
+<style>
+    .video-page {
+        display: flex;
+        gap: 20px;
+    }
+    .cam-stream {
+        background-color: #aab;
+    }
+    .cam-list {
+        margin-top: 12px;
+        li + li {
+            margin-top: 8px;
+        }
+    }
+</style>
+<div class="video-page">
+    <img width="480" height="540" class="cam-stream" src="" />
+    <section>
+        <h2>Камеры</h2>
+        <ul class="cam-list">
+            {% for cam in cams %}
+                <li>
+                    <a class="cam-list__link" href="?stream={{cam.id}}">{{cam.name}}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+</div>
+<script type="module">
+    const streamOut = document.querySelector('.cam-stream')
+    const camList = document.querySelector('.cam-list');
+
+    camList.addEventListener('click', onCamSelect);
+    document.addEventListener('DOMContentLoaded', onLoad)
+
+    function onCamSelect(e) {
+        if (e.target.className !== 'cam-list__link') {
+            return;
+        }
+        e.preventDefault();
+        const [,camId] = e.target.href.match(/stream=(\d+)$/);
+        setCam(camId)
+    }
+
+    function setCam(camId) {
+        streamOut.src = `/video/${camId}`;
+        window.history.pushState("", "", `?stream=${camId}`);
+        window.localStorage.setItem("camId", camId)
+    }
+
+    function onLoad() {
+        const camId = window.localStorage.getItem("camId");
+        if (camId) {
+            setCam(camId);
+        }
+    }
+</script>
 {% endblock %}
