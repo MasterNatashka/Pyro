@@ -1,11 +1,24 @@
 # Pyro
 
-Для запуска проекта необходимо установить [Pyenv](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation)
-```
-pip install pyenv-win --target %USERPROFILE%\\.pyenv
+## Для запуска проекта необходимо установить [Pyenv](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation)
+
+### Установка для Linux
+```sh
+# Обновить систему: sudo apt update, upgrade...
+# Установить пакеты для сборки https://stackoverflow.com/a/74314165
+# Перезагрузиться
+# Скачать и установить pyenv командой
+curl -fsSL https://pyenv.run | bash
+# Зарегистрировать pyenv в bash
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
+echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(pyenv init - bash)"' >> ~/.bashrc
+source ~/.bashrc
+# Проверить установку. Может понадобиться перезапуск консоли или перезагрузка
+pyenv --version
 ```
 
-Установка [для Windows](https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#installation):
+### Установка [для Windows](https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#installation):
 
 Выполнить в терминале powershell команду для скачивания программы и её регистрации в Windows:
 ```PowerShell
@@ -15,35 +28,44 @@ Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv
 ```PowerShell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
 ```
-Может понадобиться обновить список доступных версий Python командой
-```
+### Использование
+
+```sh
+# В проекте используется версия Python 3.12.10, для установки выполнить команду
+pyenv install 3.12.10
+# Если версия не найдена, обновить список доступных версий Python командой
 pyenv update
 ```
 
-В проекте используется версия Python 3.12.10, для установки выполнить в терминале команду
-```
-pyenv install 3.12.10
-```
-Задаем локальную версию Python 3.12.10 в папке проекта для синхронизации версии Python на разных машинах
-```
-pyenv local 3.12.10
-```
+## Для управления версиями установленных библиотек использутся [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer)
 
-Для управления версиями установленных библиотек необходимо установить [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer)
+### Установка для Windowss
 Выполнить в терминале PowerShell команды для скачивания программы и её регистрации в Windows:
 ```PowerShell
 # скачивание
 (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
 # регистрация в PATH windows
 [System.Environment]::SetEnvironmentVariable("PATH", [System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::User) + ";$env:APPDATA\Python\Scripts", [System.EnvironmentVariableTarget]::User)
-```
-
-перезапустить PowerShell, проверить правильность установки:
-```
+# перезапустить PowerShell, проверить правильность установки:
 poetry --version
 ```
 
-Запустить локальный сервер для разработки:
+### Установка для Linux
 ```sh
+curl -sSL https://install.python-poetry.org | python -
+```
+
+## Работа с проектом
+
+```sh
+# установка зависимостей
+poetry install
+# подготовка локальной базы данных
+poetry run python src/manage.py migrate
+# добавление суперпользователя
+poetry run python src/manage.py createsuperuser
+# запуск сервера для локальной разработки
 poetry run python src/manage.py runserver
 ```
+После запуска в [панели администратора](http://localhost:8000/admin)
+добавить несколько участков и камер.
