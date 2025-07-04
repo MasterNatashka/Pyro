@@ -1,63 +1,137 @@
-{% extends "pages/base.html" %}
-
-{% block title %}Просмотр{% endblock %}
-
-{% block content %}
+{% extends "pages/base.html" %} {% block title %}Просмотр{% endblock %} {% block content %}
 <style>
-    .video-page {
-        display: flex;
-        gap: 20px;
+  .video-page {
+    display: flex;
+    gap: 20px;
+  }
+  .cam-stream {
+    background-color: #aab;
+  }
+  .cam-list {
+    margin-top: 12px;
+    li + li {
+      margin-top: 8px;
     }
-    .cam-stream {
-        background-color: #aab;
+  }
+  .ptz-buttons {
+    width: 100px;
+    margin-top: 12px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+
+    .ptz-btn {
+      aspect-ratio: 1;
+      font-size: 20px;
     }
-    .cam-list {
-        margin-top: 12px;
-        li + li {
-            margin-top: 8px;
-        }
-    }
+  }
 </style>
 <div class="video-page">
-    <img width="480" height="540" class="cam-stream" src="" />
-    <section>
-        <h2>Камеры</h2>
-        <ul class="cam-list">
-            {% for cam in cams %}
-                <li>
-                    <a class="cam-list__link" href="?stream={{cam.id}}">{{cam.name}}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </section>
+  <div>
+    <img width="480" height="540" class="cam-stream js-cam-stream" src="" />
+    <div class="ptz-buttons js-ptz-buttons">
+      <button type="button" class="ptz-btn up left">⇖</button>
+      <button type="button" class="ptz-btn up">⇑</button>
+      <button type="button" class="ptz-btn up right">⇗</button>
+      <button type="button" class="ptz-btn left">⇐</button>
+      <span></span>
+      <button type="button" class="ptz-btn right">⇒</button>
+      <button type="button" class="ptz-btn down left">⇙</button>
+      <button type="button" class="ptz-btn down">⇓</button>
+      <button type="button" class="ptz-btn down right">⇘</button>
+    </div>
+  </div>
+  <section>
+    <h2>Камеры</h2>
+    <ul class="cam-list js-cam-list">
+      {% for cam in cams %}
+      <li>
+        <a class="cam-list__link" href="?stream={{cam.id}}">{{cam.name}}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
 </div>
 <script type="module">
-    const streamOut = document.querySelector('.cam-stream')
-    const camList = document.querySelector('.cam-list');
+  const streamOut = document.querySelector('.js-cam-stream');
+  const camList = document.querySelector('.js-cam-list');
 
-    camList.addEventListener('click', onCamSelect);
-    document.addEventListener('DOMContentLoaded', onLoad)
+  camList.addEventListener('click', onCamSelect);
+  document.addEventListener('DOMContentLoaded', onLoad);
 
-    function onCamSelect(e) {
-        if (e.target.className !== 'cam-list__link') {
-            return;
-        }
-        e.preventDefault();
-        const [,camId] = e.target.href.match(/stream=(\d+)$/);
-        setCam(camId)
+  function onCamSelect(e) {
+    if (e.target.className !== 'cam-list__link') {
+      return;
     }
+    e.preventDefault();
+    const [, camId] = e.target.href.match(/stream=(\d+)$/);
+    setCam(camId);
+  }
 
-    function setCam(camId) {
-        streamOut.src = `/video/${camId}`;
-        window.history.pushState("", "", `?stream=${camId}`);
-        window.localStorage.setItem("camId", camId)
-    }
+  function setCam(camId) {
+    streamOut.src = `/video/${camId}`;
+    window.history.pushState('', '', `?stream=${camId}`);
+    window.localStorage.setItem('camId', camId);
+  }
 
-    function onLoad() {
-        const camId = window.localStorage.getItem("camId");
-        if (camId) {
-            setCam(camId);
-        }
+  function onLoad() {
+    const camId = window.localStorage.getItem('camId');
+    if (camId) {
+      setCam(camId);
     }
+  }
+</script>
+<script type="module">
+  const buttons = document.querySelector('.js-ptz-buttons');
+
+  buttons.addEventListener('pointerdown', movePtz);
+
+  async function movePtz(e) {
+    if (!e.target.classList.contains('ptz-btn')) {
+      return;
+    }
+    const camId = window.localStorage.getItem('camId')??1;
+    const tilt = e.target.classList.contains('up')
+      ? 0.5
+      : e.target.classList.contains('down')
+      ? -0.5
+      : 0;
+    const pan = e.target.classList.contains('right')
+      ? 0.5
+      : e.target.classList.contains('left')
+      ? -0.5
+      : 0;
+    const res = await fetch(`/video/${camId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}',
+      },
+      body: JSON.stringify({
+        action: 'pan-tilt',
+        pan,
+        tilt,
+      }),
+    });
+    if (res.ok) {
+      document.addEventListener('pointerup', stopPtz);
+    }
+  }
+  async function stopPtz() {
+    const camId = window.localStorage.getItem('camId');
+    const res = await fetch(`/video/${camId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}',
+      },
+      body: JSON.stringify({ action: 'stop' }),
+    });
+    if (res.ok) {
+      document.removeEventListener('pointerup', stopPtz);
+    }
+  }
 </script>
 {% endblock %}
