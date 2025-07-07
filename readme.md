@@ -27,6 +27,18 @@ Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv
 При возникновении ошибки прав доступа запустить PowerShell от имени администратора и выполнить команду, после чего повторить попытку установки:
 ```PowerShell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
+
+# Добавление PYENV, PYENV_HOME и PYENV_ROOT в ваши переменные среды
+
+[System.Environment]::SetEnvironmentVariable('PYENV',$env:USERPROFILE + "\.pyenv\pyenv-win\","User")
+
+[System.Environment]::SetEnvironmentVariable('PYENV_ROOT',$env:USERPROFILE + "\.pyenv\pyenv-win\","User")
+
+[System.Environment]::SetEnvironmentVariable('PYENV_HOME',$env:USERPROFILE + "\.pyenv\pyenv-win\","User")
+
+# Теперь добавьте следующие пути к вашей переменной ПАТХ ПОЛЬЗОВАТЕЛЬСКОГО, чтобы получить доступ к команде pyenv
+
+[System.Environment]::SetEnvironmentVariable('path', $env:USERPROFILE + "\.pyenv\pyenv-win\bin;" + $env:USERPROFILE + "\.pyenv\pyenv-win\shims;" + [System.Environment]::GetEnvironmentVariable('path', "User"),"User")
 ```
 ### Использование
 
@@ -54,6 +66,8 @@ poetry --version
 ```sh
 curl -sSL https://install.python-poetry.org | python -
 ```
+## Настройка окружения
+В корне проекта создать файл .env, скопировать в него содержимое файла .env.example и заполнить его.
 
 ## Работа с проектом
 
