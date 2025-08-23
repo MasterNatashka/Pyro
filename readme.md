@@ -16,6 +16,8 @@ echo 'eval "$(pyenv init - bash)"' >> ~/.bashrc
 source ~/.bashrc
 # Проверить установку. Может понадобиться перезапуск консоли или перезагрузка
 pyenv --version
+# Для сборки исполняемых файлов версий Python необхоимо установить пакеты
+sudo apt install build-essential curl libbz2-dev libffi-dev liblzma-dev libncursesw5-dev libreadline-dev libsqlite3-dev libssl-dev libxml2-dev libxmlsec1-dev llvm make tk-dev wget xz-utils zlib1g-dev
 ```
 
 ### Установка [для Windows](https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#installation):
