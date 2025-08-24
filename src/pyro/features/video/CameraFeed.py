@@ -62,7 +62,7 @@ class CameraFeed:
 
     def _rtsp_url(self):
         if self._source == os.environ.get("TEST_CAM_ADDR"):
-            return os.environ.get("TEST_CAM_RTSP")
+            return os.environ.get("TEST_CAM_ADDR2")
         user = os.environ.get("RTSP_USER")
         password = os.environ.get("RTSP_PASSWORD")
         return f"rtsp://{self._source}:554/user={user}&password={password}&channel=0&stream=1?.sdp"
