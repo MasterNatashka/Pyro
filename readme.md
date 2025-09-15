@@ -1,8 +1,8 @@
 # Pyro
 
-## Для запуска проекта необходимо установить [Pyenv](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation)
+## Для запуска проекта необходимо установить Pyenv
 
-### Установка для Linux
+### Установка Pyenv [для Linux](https://github.com/pyenv/pyenv?tab=readme-ov-file#linuxunix)
 ```sh
 # Обновить систему: sudo apt update, upgrade...
 # Установить пакеты для сборки https://stackoverflow.com/a/74314165
@@ -20,7 +20,7 @@ pyenv --version
 sudo apt install build-essential curl libbz2-dev libffi-dev liblzma-dev libncursesw5-dev libreadline-dev libsqlite3-dev libssl-dev libxml2-dev libxmlsec1-dev llvm make tk-dev wget xz-utils zlib1g-dev
 ```
 
-### Установка [для Windows](https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#installation):
+### Установка Pyenv [для Windows](https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#installation):
 
 Выполнить в терминале powershell команду для скачивания программы и её регистрации в Windows:
 ```PowerShell
@@ -42,7 +42,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
 
 [System.Environment]::SetEnvironmentVariable('path', $env:USERPROFILE + "\.pyenv\pyenv-win\bin;" + $env:USERPROFILE + "\.pyenv\pyenv-win\shims;" + [System.Environment]::GetEnvironmentVariable('path', "User"),"User")
 ```
-### Использование
+### Использование PyEnv
 
 ```sh
 # В проекте используется версия Python 3.12.10, для установки выполнить команду
@@ -53,7 +53,7 @@ pyenv update
 
 ## Для управления версиями установленных библиотек использутся [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer)
 
-### Установка для Windowss
+### Установка Poetry для Windows
 Выполнить в терминале PowerShell команды для скачивания программы и её регистрации в Windows:
 ```PowerShell
 # скачивание
@@ -64,7 +64,7 @@ pyenv update
 poetry --version
 ```
 
-### Установка для Linux
+### Установка Poetry для Linux 
 ```sh
 curl -sSL https://install.python-poetry.org | python -
 ```
@@ -74,6 +74,8 @@ curl -sSL https://install.python-poetry.org | python -
 ## Работа с проектом
 
 ```sh
+# установка библиотек, например, ultralytics
+poetry add ultralytics
 # установка зависимостей
 poetry install
 # подготовка локальной базы данных
